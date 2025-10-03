@@ -5,7 +5,6 @@ ARG ETESYNC_VERSION
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PIP_NO_CACHE_DIR=1
 
-# install packages and pip requirements first, in a single step,
 COPY /requirements.txt /requirements.txt
 RUN set -ex ;\
     apk add libpq postgresql-dev --virtual .build-deps coreutils gcc libc-dev libffi-dev make ;\
@@ -20,12 +19,10 @@ RUN set -ex ;\
     mkdir -p /data/static /data/media ;\
     cd /app ;\
     mkdir -p /etc/etebase-server ;\
-    cp docker/test-server/etebase-server.ini /etc/etebase-server ;\
+    cp docker/etebase-server.ini /etc/etebase-server ;\
     sed -e '/ETEBASE_CREATE_USER_FUNC/ s/^#*/#/' -i /app/etebase_server/settings.py ;\
-    chmod +x docker/test-server/entrypoint.sh
+    chmod +x docker/entrypoint.sh
 
-# this is a test image and should start up quickly, so it starts with the DB
-# and static data already fully set up.
 RUN set -ex ;\
     cd /app ;\
     python manage.py migrate ;\
@@ -35,4 +32,4 @@ ENV ETESYNC_VERSION=${ETESYNC_VERSION}
 VOLUME /data
 EXPOSE 3735
 
-ENTRYPOINT ["/app/docker/test-server/entrypoint.sh"]
+ENTRYPOINT ["/app/docker/entrypoint.sh"]
