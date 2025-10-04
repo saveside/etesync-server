@@ -30,14 +30,14 @@ RUN set -ex ;\
 ########################################################
 
 ###################### PYTHON VENV #####################
-RUN python3 -m venv /venv
-ENV PATH="/venv/bin:$PATH"
+RUN python3 -m venv /app/venv
+ENV PATH="/app/venv/bin:$PATH"
 ########################################################
 
 ###################### PYTHON DEPENDENCIES #############
-COPY /requirements.txt /requirements.txt
+COPY requirements.txt /app/requirements.txt
 RUN pip install -U pip && \
-    pip install --no-cache-dir --progress-bar off -r /requirements.txt
+    pip install --no-cache-dir --progress-bar off -r /app/requirements.txt
 ########################################################
 
 ###################### CLEANUP #########################
